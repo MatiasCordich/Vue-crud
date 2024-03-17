@@ -1,12 +1,12 @@
 <template>
-  <div class="home">
-    <h1>Bienvenido a la página de inicio</h1>
+  <div class="wrapper">
     <div v-if="products.length > 0">
-      <router-link to="/create">Agregar producto</router-link>
-      <h2>Productos</h2>
-
-
       <div class="table-responsive">
+        <div class="table_header">
+          <h2>Productos</h2>
+          <router-link class="link_crete-product" to="/create">Agregar producto</router-link>
+        </div>
+        
         <table>
           <thead>
             <tr>
@@ -28,8 +28,8 @@
                 <span v-if="product.disponible" class="stock-available">Sí</span>
                 <span v-else class="stock-unavailable">No</span>
               </td>
-              <td>
-                <button @click="handleEditProduct(product.id_producto)">Editar</button>
+              <td class="btn-actions">
+                <button class="edit-button" @click="handleEditProduct(product.id_producto)">Editar</button>
                 <button @click="handleDeleteProduct(product.id_producto)" class="delete-button">Eliminar</button>
               </td>
             </tr>
@@ -76,7 +76,7 @@ export default {
     };
 
     const handleEditProduct = (id) => {
-      router.push({ name: 'EditProduct', params: { id: id} });
+      router.push({ name: 'EditProduct', params: { id: id } });
     }
 
     // Hace la llamada de getProducts cuando el componente se crea
@@ -89,12 +89,44 @@ export default {
 </script>
 
 <style scoped>
+
+.wrapper{
+  max-width: 220rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+}
 .table-responsive {
-  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 120rem;
+  width: 100%;
+  height: 80rem;
+  margin: 5rem auto;
+  overflow: auto;
+}
+
+.table_header{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.link_crete-product{
+  width: fit-content;
+  padding: 1rem;
+  border-radius: .4rem;
+  color: #fafafa;
+  background-color: var(--blue);
 }
 
 table {
   width: 100%;
+  overflow: scroll;
   border-collapse: collapse;
 }
 
@@ -115,5 +147,41 @@ th {
 
 .stock-unavailable {
   color: red;
+}
+
+.btn-actions{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.edit-button, .delete-button{
+  padding: 1rem;
+  border-radius: .4rem;
+  cursor: pointer;
+  
+}
+
+.edit-button{
+  background-color: var(--yellow);
+}
+
+.delete-button{
+  background-color: var(--red);
+  color: var(--white);
+}
+
+@media (min-width: 768px) {
+    .table_header{
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 95%;
+    }
+
+    .btn-actions{
+      flex-direction: row;
+    }
 }
 </style>

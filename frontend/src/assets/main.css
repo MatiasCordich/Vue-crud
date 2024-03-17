@@ -1,2 +1,40 @@
-@import './base.css';
+:root{
+    --font:  "Lexend", sans-serif;
+
+    --blue: #007BFF;
+    --red: #DC3545;
+    --yellow: #FFC107;
+    --white: #FEFBF6;
+    --black: #0F0F0F;
+    --green: #007F73;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+html{
+    font-size: 62.5%;
+}
+
+body{
+    font-size: 1.8rem;
+}
+
+html, body {
+    width: 100%;
+}
+
+a{
+    text-decoration: none;
+}
+
+button{
+    border: none;
+    background-color: transparent;
+    font-size: 1.8rem;
+}
 

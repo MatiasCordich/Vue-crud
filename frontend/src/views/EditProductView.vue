@@ -1,26 +1,31 @@
 <template>
-  <div class="edit-product">
-    <h1>Editar Producto</h1>
-    <!-- Contenido del formulario para editar un producto -->
-    <router-link to="/">Volver a la página de inicio</router-link>
-    <form @submit.prevent="handleSubmit">
-      <div>
-        <label for="nombre">Nombre:</label>
+  <div class="form_box">
+    <router-link class="link_home" to="/">
+      <p>
+        Inicio
+      </p>
+    </router-link>
+    <form class="form_container" @submit.prevent="handleSubmit">
+      <div class="form_field">
+        <label for="nombre">Nombre</label>
         <input type="text" id="nombre" v-model="formData.nombre" required>
       </div>
-      <div>
-        <label for="descripcion">Descripción:</label>
-        <input type="text" id="descripcion" v-model="formData.descripcion" required>
+      <div class="form_field">
+        <label for="descripcion">Descripción</label>
+        <textarea type="text" id="descripcion" v-model="formData.descripcion" required></textarea>
       </div>
-      <div>
-        <label for="precio">Precio:</label>
+      <div class="form_field">
+        <label for="precio">Precio</label>
         <input type="number" id="precio" v-model.number="formData.precio" required>
       </div>
-      <div>
-        <label for="disponible">Disponible:</label>
+      <div class="form_field-check">
         <input type="checkbox" id="disponible" v-model="formData.disponible">
+        <label class="label-checkbox" for="disponible">Disponible
+          <v-icon class="icon-checked" v-if="formData.disponible" :icon="checkIcon" />
+        </label>
+
       </div>
-      <button type="submit">Guardar Cambios</button>
+      <button class="btn_submit" type="submit">Guardar cambios</button>
     </form>
   </div>
 </template>
@@ -29,9 +34,13 @@
 import { editProduct, getProductById } from '@/services/productServices';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { Icon } from '@iconify/vue';
 
 export default {
   name: 'EditProduct',
+  components: {
+    'v-icon': Icon
+  },
   setup() {
 
     const route = useRoute()
@@ -44,6 +53,9 @@ export default {
       precio: 0,
       disponible: false
     })
+
+
+    const checkIcon = 'material-symbols:check-small-rounded'
 
     // Funcion para cargar los datos del producto 
     const loadProductData = async () => {
@@ -74,7 +86,7 @@ export default {
       }
     };
 
-    return { formData, handleSubmit };
+    return { formData, handleSubmit,checkIcon };
 
 
   }
