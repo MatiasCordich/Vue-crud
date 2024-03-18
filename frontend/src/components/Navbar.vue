@@ -3,27 +3,42 @@
         <div class="header_navbar">
             <h1>{{ currentPage }}</h1>
             <button @click="toggleMenu">
-                <v-icon class="icon-btn" icon="ci:hamburger-md" />
+                <v-icon class="icon-btn" icon="ci:hamburger-md" :class="{ 'icon-dark': darkMode }" />
             </button>
         </div>
 
         <div v-if="showMenu || !isMobile" class="menu">
             <ul>
                 <li>
-                    <v-icon class="icon-link" icon="uil:linkedin" />
-                    Matias Cordich
+                    <a href="https://github.com/MatiasCordich" target="_blank"
+                        :class="{ 'icon-dark': darkMode, 'icon-light': !darkMode }">
+                        <v-icon class="icon-link" icon="akar-icons:github-outline-fill" />
+                        Github
+                    </a>
+
                 </li>
                 <li>
-                    <v-icon class="icon-link" icon="akar-icons:github-outline-fill" />
-                    Github
+                    <a href="https://www.linkedin.com/in/matiassiocordich/" target="_blank"
+                        :class="{ 'icon-dark': darkMode, 'icon-light': !darkMode }">
+                        <v-icon class="icon-link" icon="uil:linkedin" />
+                        Matias Cordich
+                    </a>
+
+                </li>
+
+                <li>
+                    <a href="https://matiassiocordich.vercel.app/" target="_blank"
+                        :class="{ 'icon-dark': darkMode, 'icon-light': !darkMode }">
+                        <v-icon class="icon-link" icon="bytesize:portfolio" />
+                        Portfolio
+                    </a>
+
                 </li>
                 <li>
-                    <v-icon class="icon-link" icon="bytesize:portfolio" />
-                    Portfolio
-                </li>
-                <li>
-                    <button @click="toggleTheme" class="theme-toggle">
-                        <v-icon class="icon-link" :icon="themeIcon" />
+                    <button @click="toggleDarkMode" class="theme-toggle">
+                        <v-icon class="btn-icon-theme"
+                            :icon="darkMode ? 'material-symbols:sunny-rounded' : 'material-symbols:dark-mode'"
+                            :class="{ 'icon-dark': darkMode }" />
                     </button>
                 </li>
             </ul>
@@ -38,6 +53,7 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { Icon } from '@iconify/vue';
+import { useThemeStore } from '@/store/store';
 
 export default {
     components: {
@@ -46,8 +62,7 @@ export default {
     setup() {
         const route = useRoute()
         const showMenu = ref(window.innerWidth >= 768)
-        const darkMode = ref(false);
-
+        const themeStore = useThemeStore()
 
         // Funcion que indica en que ruta estamos en el Navbar
         const currentPage = computed(() => {
@@ -75,14 +90,10 @@ export default {
         }
 
         // Funcion para cambiar el tema
-        const toggleTheme = () => {
-            darkMode.value = !darkMode.value;
+        const toggleDarkMode = () => {
+            themeStore.toggleDarkMode();
         };
 
-        // Defino la propiedad que va a llevar :icon en base al modo del tema
-        const themeIcon = computed(() => {
-            return darkMode.value ? "material-symbols:sunny-rounded" : "material-symbols:dark-mode";
-        });
 
         // Defino si es mobile o no el tamanio de la aplicacion
         const isMobile = computed(() => {
@@ -94,18 +105,18 @@ export default {
             showMenu.value = window.innerWidth >= 768;
         });
 
+        const darkMode = computed(() => themeStore.darkMode)
 
-
-        return { currentPage, toggleMenu, showMenu, toggleTheme, themeIcon, isMobile }
+        return { currentPage, toggleMenu, showMenu, toggleDarkMode, isMobile, darkMode }
     }
 }
 
 </script>
 
 <style scoped>
+/* ------------- NAVBAR ------------- */
 nav {
-    height: 100%;
-    margin: 2rem auto;
+    padding: 1rem;
     border-radius: .6rem;
     width: 95%;
 }
@@ -123,21 +134,68 @@ nav {
     cursor: pointer;
 }
 
-.icon-link {
+.icon-link,
+.btn-icon-theme {
     font-size: 3rem;
 }
 
-.menu ul {
+
+/* ------------- MENU NAVBAR ------------- */
+.menu ul,
+.menu li,
+.menu a {
     display: flex;
+}
+
+.menu li,
+.menu a{
+    align-items: center;
+}
+
+.menu ul{
     flex-direction: column;
+}
+
+.menu ul {
     gap: 1.5rem;
 }
 
-.menu li {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.menu a {
+    gap: .5rem;
 }
+
+.icon-dark {
+    color: var(--white);
+}
+
+.icon-light {
+    color: var(--black);
+}
+
+.theme-toggle {
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    width: 6rem;
+    height: 3.5rem;
+    position: relative; 
+    border-radius: 4rem;
+    border: 1px solid var(--grey);
+}
+
+.theme-toggle .btn-icon-theme {
+  position: absolute;
+  top: .2rem;
+  left: 0;
+  padding: .2rem;
+  transition: left 0.3s ease; 
+}
+
+.theme-toggle .icon-dark {
+  left: calc(100% - 3rem); 
+}
+
+/* ------------- MEDIA QUERIES ------------- */
 
 @media (min-width: 768px) {
     .icon-btn {

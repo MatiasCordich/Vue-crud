@@ -6,7 +6,7 @@
           <h2>Productos</h2>
           <router-link class="link_crete-product" to="/create">Agregar producto</router-link>
         </div>
-        
+
         <table>
           <thead>
             <tr>
@@ -30,7 +30,7 @@
               </td>
               <td class="btn-actions">
                 <button class="edit-button" @click="handleEditProduct(product.id_producto)">Editar</button>
-                <button @click="handleDeleteProduct(product.id_producto)" class="delete-button">Eliminar</button>
+                <button @click="showDeleteConfirmation(product)" class="delete-button">Eliminar</button>
               </td>
             </tr>
           </tbody>
@@ -47,6 +47,7 @@
 import { onMounted, ref } from 'vue';
 import { deleteProduct, getAllProducts } from '@/services/productServices';
 import { useRouter } from 'vue-router';
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 export default {
   name: 'Home',
@@ -71,10 +72,38 @@ export default {
         await deleteProduct(id)
         await fetchProducts()
       } catch (error) {
-
+        console.error('Error al eliminar el producto:', error);
+        ElNotification.error({
+          title: 'Error',
+          message: 'Hubo un error al eliminar el producto'
+        });
       }
     };
 
+    // Funcion para confirmar la accion de eliminar el producto
+    const showDeleteConfirmation = (product) => {
+      ElMessageBox.confirm('¿Estás seguro de eliminar este producto?', 'Confirmar eliminación', {
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        handleDeleteProduct(product.id_producto);
+        ElMessage({
+          title: 'Éxito',
+          message: 'El producto se eliminó correctamente.',
+          type: 'success'
+        });
+      }).catch(() => {
+        ElMessage({
+          title: 'Cancelado',
+          message: 'La eliminación del producto ha sido cancelada.',
+          type: 'info'
+        });
+      });
+    };
+
+
+    // Funcion que me lleva a la pagina de Editar Producto
     const handleEditProduct = (id) => {
       router.push({ name: 'EditProduct', params: { id: id } });
     }
@@ -83,14 +112,13 @@ export default {
     onMounted(fetchProducts)
 
 
-    return { products, message, handleDeleteProduct, handleEditProduct };
+    return { products, message, handleDeleteProduct, handleEditProduct, showDeleteConfirmation };
   }
 };
 </script>
 
 <style scoped>
-
-.wrapper{
+.wrapper {
   max-width: 220rem;
   width: 100%;
   margin: 0 auto;
@@ -98,7 +126,9 @@ export default {
   flex-direction: column;
   gap: 2rem;
   padding: 1rem;
+  height: 100svh;
 }
+
 .table-responsive {
   display: flex;
   flex-direction: column;
@@ -110,13 +140,13 @@ export default {
   overflow: auto;
 }
 
-.table_header{
+.table_header {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-.link_crete-product{
+.link_crete-product {
   width: fit-content;
   padding: 1rem;
   border-radius: .4rem;
@@ -132,56 +162,54 @@ table {
 
 th,
 td {
-  padding: 8px;
-  border: 1px solid #ddd;
+  padding: 1rem;
   text-align: left;
+  border: 1px solid var(--grey);
 }
 
-th {
-  background-color: #f2f2f2;
-}
 
 .stock-available {
-  color: green;
+  color: var(--green);
 }
 
 .stock-unavailable {
-  color: red;
+  color: var(--red);
 }
 
-.btn-actions{
+.btn-actions {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
 }
 
-.edit-button, .delete-button{
+.edit-button,
+.delete-button {
   padding: 1rem;
   border-radius: .4rem;
   cursor: pointer;
-  
+
 }
 
-.edit-button{
+.edit-button {
   background-color: var(--yellow);
 }
 
-.delete-button{
+.delete-button {
   background-color: var(--red);
   color: var(--white);
 }
 
 @media (min-width: 768px) {
-    .table_header{
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      width: 95%;
-    }
+  .table_header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 95%;
+  }
 
-    .btn-actions{
-      flex-direction: row;
-    }
+  .btn-actions {
+    flex-direction: row;
+  }
 }
 </style>

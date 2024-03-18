@@ -1,40 +1,43 @@
-:root{
-    --font:  "Lexend", sans-serif;
+:root {
+  --font: "Lexend", sans-serif;
 
-    --blue: #007BFF;
-    --red: #DC3545;
-    --yellow: #FFC107;
-    --white: #FEFBF6;
-    --black: #0F0F0F;
-    --green: #007F73;
+  --blue: #007bff;
+  --red: #dc3545;
+  --yellow: #ffc107;
+  --white: #fefbf6;
+  --black: #0f0f0f;
+  --green: #42b883;
+  --grey: #808080;
+
 }
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: var(--font);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font);
 }
 
-html{
-    font-size: 62.5%;
+html {
+  font-size: 62.5%;
 }
 
-body{
-    font-size: 1.8rem;
+body {
+  font-size: 1.8rem;
 }
 
-html, body {
-    width: 100%;
+html,
+body {
+  width: 100%;
 }
 
-a{
-    text-decoration: none;
+a {
+  text-decoration: none;
 }
 
-button{
-    border: none;
-    background-color: transparent;
-    font-size: 1.8rem;
+button {
+  border: none;
+  background-color: transparent;
+  font-size: 1.8rem;
 }
-

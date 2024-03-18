@@ -5,7 +5,7 @@
         Inicio
       </p>
     </router-link>
-    <form class="form_container" @submit.prevent="handleSubmit">
+    <form class="form_container" :class="{ 'dark-mode-form': darkMode }"@submit.prevent="handleSubmit">
       <div class="form_field">
         <label for="nombre">Nombre</label>
         <input type="text" id="nombre" v-model="formData.nombre" required>
@@ -32,9 +32,10 @@
 
 <script>
 import { addProduct } from '@/services/productServices';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
+import { useThemeStore } from '@/store/store';
 
 export default {
   components: {
@@ -49,6 +50,10 @@ export default {
       disponible: false
     })
 
+    const themeStore = useThemeStore()
+
+    const darkMode = computed(() => themeStore.darkMode)
+
     const checkIcon = 'material-symbols:check-small-rounded'
 
     const router = useRouter()
@@ -62,7 +67,7 @@ export default {
       }
     }
 
-    return { formData, handleSubmit, checkIcon }
+    return { formData, handleSubmit, checkIcon, darkMode }
   }
 };
 
@@ -71,9 +76,12 @@ export default {
 
 <style>
 
+/* ------------- LINK HOME ------------- */
+
 .link_home{
   width: 100%;
   text-align: left;
+  margin-top: 3rem;
 }
 
 .link_home p{
@@ -83,6 +91,8 @@ export default {
   border-radius: .5rem;
   background-color: var(--blue);
 }
+
+/* ------------- FORM BOX ------------- */
 .form_box {
   display: flex;
   flex-direction: column;
@@ -91,8 +101,10 @@ export default {
   gap: 2rem;
   width: 95%;
   margin: 0 auto;
+  height: 100svh;
 }
 
+/* ------------- FORM ------------- */
 .form_container {
   max-width: 50rem;
   width: 100%;
@@ -104,7 +116,14 @@ export default {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
+.dark-mode-form {
+  background-color: #1a1a1a;
+  box-shadow: none;
+  border: 1px solid var(--grey);
+  border-radius: .3rem;
+}
 
+/* ------------- FORM FIELD ------------- */
 .form_field {
   display: flex;
   flex-direction: column;
@@ -115,7 +134,7 @@ export default {
 .form_field input,
 .form_field textarea {
   outline: none;
-  border: 1px solid #ccc;
+  border: 1px solid var(--grey);
   padding: 1rem;
   font-size: 1.8rem;
 }
@@ -131,6 +150,7 @@ export default {
   font-size: 2.2rem;
 }
 
+/* ------------- CHECKBOX ------------- */
 .form_field-check {
   display: flex;
   align-items: center;
@@ -152,7 +172,7 @@ input[type="checkbox"] {
   display: inline-block;
   width: 2rem;
   height: 2rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--grey);
   position: absolute;
   left: 12rem;
   top: .3rem;
@@ -166,17 +186,14 @@ input[type="checkbox"] {
   color: var(--white);
 }
 
-/* Estilo para el "falso" checkbox cuando está marcado */
 input[type="checkbox"]:checked+.label-checkbox:before {
   background-color: var(--green);
-  /* Color de fondo cuando está marcado */
 }
 
-/* Estilo para el "falso" checkbox cuando se pasa el mouse sobre él */
 input[type="checkbox"]+.label-checkbox:hover:before {
   border-color: var(--green);
   cursor: pointer;
-  /* Color del borde al pasar el mouse */
+
 }
 
 .btn_submit{
@@ -186,5 +203,6 @@ input[type="checkbox"]+.label-checkbox:hover:before {
   padding: 1rem;
   color: var(--white);
   border-radius: .4rem;
+  cursor: pointer;
 }
 </style>

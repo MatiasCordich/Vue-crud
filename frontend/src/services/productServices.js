@@ -7,7 +7,7 @@ export const getAllProducts = async () => {
     const response = await axios.get(`${backendUrl}/productos`);
     return response.data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -16,7 +16,7 @@ export const getProductById = async (id) => {
     const response = await axios.get(`${backendUrl}/producto/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error al obtener el producto por ID:', error);
+    console.error("Error al obtener el producto por ID:", error);
   }
 };
 
@@ -25,7 +25,7 @@ export const addProduct = async (formData) => {
     const response = await axios.post(`${backendUrl}/producto`, formData);
     return response.data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -34,21 +34,16 @@ export const editProduct = async (id, formData) => {
     const response = await axios.put(`${backendUrl}/producto/${id}`, formData);
     return response.data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
 export const deleteProduct = async (id) => {
   try {
-    // Mostrar un alert para confirmar la eliminación
-    const confirmDelete = confirm(
-      "¿Estás seguro de que deseas eliminar este producto?"
-    );
+    const response = await axios.delete(`${backendUrl}/producto/${id}`);
 
-    if (confirmDelete) {
-      await axios.delete(`${backendUrl}/producto/${id}`);
-    }
+    return response.data
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };

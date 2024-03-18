@@ -5,7 +5,7 @@
         Inicio
       </p>
     </router-link>
-    <form class="form_container" @submit.prevent="handleSubmit">
+    <form class="form_container" :class="{ 'dark-mode-form': darkMode }" @submit.prevent="handleSubmit">
       <div class="form_field">
         <label for="nombre">Nombre</label>
         <input type="text" id="nombre" v-model="formData.nombre" required>
@@ -32,9 +32,10 @@
 
 <script>
 import { editProduct, getProductById } from '@/services/productServices';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
+import { useThemeStore } from '@/store/store';
 
 export default {
   name: 'EditProduct',
@@ -53,6 +54,11 @@ export default {
       precio: 0,
       disponible: false
     })
+
+
+    const themeStore = useThemeStore()
+
+    const darkMode = computed(() => themeStore.darkMode)
 
 
     const checkIcon = 'material-symbols:check-small-rounded'
@@ -86,7 +92,7 @@ export default {
       }
     };
 
-    return { formData, handleSubmit,checkIcon };
+    return { formData, handleSubmit,checkIcon, darkMode };
 
 
   }
