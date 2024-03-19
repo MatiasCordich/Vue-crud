@@ -33,6 +33,10 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   const { nombre, descripcion, precio, disponible } = req.body;
 
+  if (!nombre || !descripcion || !precio) {
+    return res.status(400).json({ error: 'Por favor, llene los campos vacios' });
+  }
+
   try {
     const newProduct = await create({
       nombre,
@@ -53,6 +57,12 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   const { nombre, descripcion, precio, disponible } = req.body;
+
+  // Verifica si los campos requeridos están presentes y tienen datos válidos
+  if (!nombre || !descripcion || !precio) {
+    return res.status(400).json({ error: 'Por favor, llene los campos vacios' });
+  }
+
   const dataToUpdate = {
     nombre,
     descripcion,
