@@ -5,28 +5,36 @@
         Inicio
       </p>
     </router-link>
-    <form class="form_container" :class="{ 'dark-mode-form': darkMode }" @submit.prevent="handleSubmit">
+    <Form class="form_container" :class="{ 'dark-mode-form': darkMode }" @submit="handleSubmit">
+
       <div class="form_field">
         <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" v-model="formData.nombre" required>
+        <Field name="nombre" type="text" id="nombre" v-model="formData.nombre" rules="required"></Field>
+        <ErrorMessage name="nombre" class="error-message" />
       </div>
+
       <div class="form_field">
         <label for="descripcion">Descripción</label>
-        <textarea type="text" id="descripcion" v-model="formData.descripcion" required></textarea>
+        <Field name="descripcion" id="descripcion" as="textarea" type="text" v-model="formData.descripcion"
+          rules="required" class="description_field"></Field>
+        <ErrorMessage name="descripcion" class="error-message" />
       </div>
+
       <div class="form_field">
         <label for="precio">Precio</label>
-        <input type="number" id="precio" v-model.number="formData.precio" required>
+        <Field name="precio" type="number" id="precio" v-model.number="formData.precio" rules="required"></Field>
+        <ErrorMessage name="precio" class="error-message" />
       </div>
+
       <div class="form_field-check">
         <input type="checkbox" id="disponible" v-model="formData.disponible">
         <label class="label-checkbox" for="disponible">Disponible
           <v-icon class="icon-checked" v-if="formData.disponible" :icon="checkIcon" />
         </label>
-
       </div>
+
       <button class="btn_submit" type="submit">Guardar cambios</button>
-    </form>
+    </Form>
   </div>
 </template>
 
@@ -36,6 +44,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useThemeStore } from '@/store/store';
+import { validate } from 'vee-validate';
 
 export default {
   name: 'EditProduct',
@@ -44,10 +53,15 @@ export default {
   },
   setup() {
 
+    /* ------------- UTILILIZO MIS HOOKS PARA RUTAS Y TEMA ------------- */
     const route = useRoute()
     const router = useRouter()
+    const themeStore = useThemeStore()
 
+    /* ------------- OBTENGO EL ID DEL PRODUCTO OR EL PARAM DE LA URL  ------------- */
     const id_product = route.params.id
+
+    /* ------------- SETEO MI VARIABLE REACTIVA ------------- */
     const formData = ref({
       nombre: '',
       descripcion: '',
@@ -55,18 +69,20 @@ export default {
       disponible: false
     })
 
-
-    const themeStore = useThemeStore()
-
+    /* ------------- OBTENGO EL RESULTADO ACTUAL DEL STORE  ------------- */
     const darkMode = computed(() => themeStore.darkMode)
 
-
+    /* ------------- CONSTANTE QUE GUARDA EL VALOR DEL ICONO A MOSTAR PARA EL CHECKBOX ------------- */
     const checkIcon = 'material-symbols:check-small-rounded'
 
-    // Funcion para cargar los datos del producto 
+    /* ------------- FUNCION PARA CARGAR LOS DATOS DEL PRODUCTO ------------- */
     const loadProductData = async () => {
       try {
+
+        // Obtengo los datos del producto por el id_product obtenido del param
         const productData = await getProductById(id_product)
+
+        // Seteo los vlaors del formulario a la informacion obtenida por getProductById()
         formData.value = {
           nombre: productData.nombre,
           descripcion: productData.descripcion,
@@ -78,12 +94,13 @@ export default {
       }
     }
 
-    // Cargar los datos del producto al inicializar el componente
+    /* ------------- CARGAR LOS DATOS DEL PRODUCTO CUANDO EL COMPONENTE TERMINA DE CARGARSE ------------- */
     onMounted(loadProductData);
 
-    // Función para manejar el envío del formulario
+    //* ------------- FUNCIO PARA EDITAR EL PRODUCTO ------------- */
     const handleSubmit = async () => {
       try {
+        await validate()
         await editProduct(id_product, formData.value);
         // Redirigir al home después de editar el producto
         router.push('/');
@@ -92,7 +109,7 @@ export default {
       }
     };
 
-    return { formData, handleSubmit,checkIcon, darkMode };
+    return { formData, handleSubmit, checkIcon, darkMode };
 
 
   }
@@ -100,5 +117,5 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos específicos para este componente */
+
 </style>

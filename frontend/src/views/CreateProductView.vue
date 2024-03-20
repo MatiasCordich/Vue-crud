@@ -5,28 +5,37 @@
         Inicio
       </p>
     </router-link>
-    <form class="form_container" :class="{ 'dark-mode-form': darkMode }"@submit.prevent="handleSubmit">
+    <Form class="form_container" :class="{ 'dark-mode-form': darkMode }" @submit="handleSubmit">
+
       <div class="form_field">
         <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" v-model="formData.nombre" required>
+        <Field name="nombre" type="text" id="nombre" v-model="formData.nombre" rules="required"></Field>
+        <ErrorMessage name="nombre" class="error-message" />
       </div>
+
       <div class="form_field">
         <label for="descripcion">Descripción</label>
-        <textarea type="text" id="descripcion" v-model="formData.descripcion" required></textarea>
+        <Field name="descripcion" id="descripcion" as="textarea" type="text" v-model="formData.descripcion"
+          rules="required" class="description_field"></Field>
+        <ErrorMessage name="descripcion" class="error-message" />
       </div>
+
       <div class="form_field">
         <label for="precio">Precio</label>
-        <input type="number" id="precio" v-model.number="formData.precio" required>
+        <Field name="precio" type="number" id="precio" v-model.number="formData.precio" rules="required"></Field>
+        <ErrorMessage name="precio" class="error-message" />
       </div>
+
       <div class="form_field-check">
         <input type="checkbox" id="disponible" v-model="formData.disponible">
         <label class="label-checkbox" for="disponible">Disponible
           <v-icon class="icon-checked" v-if="formData.disponible" :icon="checkIcon" />
         </label>
-
       </div>
+
       <button class="btn_submit" type="submit">Agregar Producto</button>
-    </form>
+
+    </Form>
   </div>
 </template>
 
@@ -36,6 +45,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useThemeStore } from '@/store/store';
+import { validate } from 'vee-validate';
 
 export default {
   components: {
@@ -43,6 +53,7 @@ export default {
   },
   setup() {
 
+    /* ------------- VARIABLE REACTIVAS ------------- */
     const formData = ref({
       nombre: '',
       descripcion: '',
@@ -50,16 +61,21 @@ export default {
       disponible: false
     })
 
+    /* ------------- UTILILIZO MIS HOOKS PARA RUTAS Y PARA EL ESTAOD DEL TEMA ------------- */
     const themeStore = useThemeStore()
-
-    const darkMode = computed(() => themeStore.darkMode)
-
-    const checkIcon = 'material-symbols:check-small-rounded'
-
     const router = useRouter()
 
+
+    /* ------------- OBTENGO EL RESULTADO ACTUAL DEL STORE  ------------- */
+    const darkMode = computed(() => themeStore.darkMode)
+
+    /* ------------- CONSTANTE QUE GUARDA EL VALOR DEL ICONO A MOSTAR PARA EL CHECKBOX ------------- */
+    const checkIcon = 'material-symbols:check-small-rounded'
+
+    /* ------------- FUNCION POARA AGERGAR EL PRODUCTO ------------- */
     const handleSubmit = async () => {
       try {
+        await validate()
         await addProduct(formData.value);
         router.push('/')
       } catch (error) {
@@ -75,16 +91,15 @@ export default {
 </script>
 
 <style>
-
 /* ------------- LINK HOME ------------- */
 
-.link_home{
+.link_home {
   width: 100%;
   text-align: left;
   margin-top: 3rem;
 }
 
-.link_home p{
+.link_home p {
   width: fit-content;
   padding: 1rem;
   color: var(--white);
@@ -145,12 +160,13 @@ export default {
 }
 
 .form_field label,
-.label-checkbox{
+.label-checkbox {
   font-weight: 500;
   font-size: 2.2rem;
 }
 
 /* ------------- CHECKBOX ------------- */
+
 .form_field-check {
   display: flex;
   align-items: center;
@@ -196,7 +212,8 @@ input[type="checkbox"]+.label-checkbox:hover:before {
 
 }
 
-.btn_submit{
+/* ------------- BTN SUBMIT ------------- */
+.btn_submit {
   background-color: var(--green);
   width: fit-content;
   margin: 0 auto;
@@ -204,5 +221,15 @@ input[type="checkbox"]+.label-checkbox:hover:before {
   color: var(--white);
   border-radius: .4rem;
   cursor: pointer;
+}
+
+/* ------------- ERROR MESSAGE ------------- */
+.error-message {
+  color: var(--red);
+  font-weight: 600;
+  border: 1px solid var(--red);
+  padding: 1rem;
+  font-size: 1.3rem;
+  background-color: rgba(255, 0, 0, 0.144);
 }
 </style>

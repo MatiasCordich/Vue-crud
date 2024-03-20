@@ -47,16 +47,18 @@
 import { onMounted, ref } from 'vue';
 import { deleteProduct, getAllProducts } from '@/services/productServices';
 import { useRouter } from 'vue-router';
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox, ElNotification } from 'element-plus'
 
 export default {
   name: 'Home',
   setup() {
 
+    /* ------------- VARIABLES REACTIVAS ------------- */
     const products = ref([]);
     const message = ref('');
     const router = useRouter()
 
+    /* ------------- FUNCION PARA LISTAR LOS PRODUCTOS ------------- */
     const fetchProducts = async () => {
       try {
         const data = await getAllProducts()
@@ -66,7 +68,7 @@ export default {
       }
     };
 
-    // Función para eliminar un producto
+    /* ------------- FUNCION PARA ELMINAR UN PRODUCTO ------------- */
     const handleDeleteProduct = async (id) => {
       try {
         await deleteProduct(id)
@@ -80,35 +82,43 @@ export default {
       }
     };
 
-    // Funcion para confirmar la accion de eliminar el producto
+    /* ------------- FUNCION PARA MOSTRAR UN POP UP DE CONFIRMACION PARA ELIMINAR EL PRODUCTO ------------- */
     const showDeleteConfirmation = (product) => {
+
+      // Muestro el pop up de confirmacion
       ElMessageBox.confirm('¿Estás seguro de eliminar este producto?', 'Confirmar eliminación', {
         confirmButtonText: 'Sí',
-        cancelButtonText: 'Cancelar',
+        cancelButtonText: 'No',
         type: 'warning'
       }).then(() => {
+
+        // Si procedo con eliminar el producto, invoco la funcion para eliminar el producto
         handleDeleteProduct(product.id_producto);
-        ElMessage({
+
+        // Muestro una notificacion que me diga que se elimino correctamente
+        ElNotification({
           title: 'Éxito',
           message: 'El producto se eliminó correctamente.',
           type: 'success'
         });
       }).catch(() => {
-        ElMessage({
+
+        // Caso contraio muestro una notificacion que muestre que se cancelo la operacion
+        ElNotification({
           title: 'Cancelado',
-          message: 'La eliminación del producto ha sido cancelada.',
+          message: 'La operación de eliminar producto ha sido cancelada.',
           type: 'info'
         });
       });
     };
 
 
-    // Funcion que me lleva a la pagina de Editar Producto
+    /* ------------- FUNCION QUE ME LLEVA A LA VISTA EDITPRODUCT.VUE ------------- */
     const handleEditProduct = (id) => {
       router.push({ name: 'EditProduct', params: { id: id } });
     }
 
-    // Hace la llamada de getProducts cuando el componente se crea
+    /* ------------- HACER LA LLAMADA CUANDO EL COMPONENTE TERMINA DE CARGARSE ------------- */
     onMounted(fetchProducts)
 
 
@@ -118,6 +128,8 @@ export default {
 </script>
 
 <style scoped>
+
+/* ------------- HOME - WRAPPER ------------- */
 .wrapper {
   max-width: 220rem;
   width: 100%;
@@ -128,6 +140,17 @@ export default {
   padding: 1rem;
   height: 100svh;
 }
+
+/* ------------- LINK A LA VISTA CREATEPRODUCT.VUE ------------- */
+.link_crete-product {
+  width: fit-content;
+  padding: 1rem;
+  border-radius: .4rem;
+  color: #fafafa;
+  background-color: var(--blue);
+}
+
+/* ------------- TABLA PRODUCTOS ------------- */
 
 .table-responsive {
   display: flex;
@@ -146,13 +169,6 @@ export default {
   gap: 2rem;
 }
 
-.link_crete-product {
-  width: fit-content;
-  padding: 1rem;
-  border-radius: .4rem;
-  color: #fafafa;
-  background-color: var(--blue);
-}
 
 table {
   width: 100%;
@@ -167,7 +183,7 @@ td {
   border: 1px solid var(--grey);
 }
 
-
+/* ------------- TABLA INDICADOR DISPONIBILIDAD ------------- */
 .stock-available {
   color: var(--green);
 }
@@ -176,6 +192,7 @@ td {
   color: var(--red);
 }
 
+/* ------------- TABLA BOTONES ------------- */
 .btn-actions {
   display: flex;
   flex-direction: column;
@@ -199,6 +216,8 @@ td {
   background-color: var(--red);
   color: var(--white);
 }
+
+/* ------------- MEDIA QUERIES ------------- */
 
 @media (min-width: 768px) {
   .table_header {
