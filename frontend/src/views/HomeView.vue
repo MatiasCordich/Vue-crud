@@ -121,14 +121,13 @@ export default {
     /* ------------- HACER LA LLAMADA CUANDO EL COMPONENTE TERMINA DE CARGARSE ------------- */
     onMounted(fetchProducts)
 
-
+    /* ------------- DEVOLVEMOS LOS VALORES NECESARIOS PARA QUE FUNCIONE LA VISTA ------------- */
     return { products, message, handleDeleteProduct, handleEditProduct, showDeleteConfirmation };
   }
 };
 </script>
 
 <style scoped>
-
 /* ------------- HOME - WRAPPER ------------- */
 .wrapper {
   max-width: 220rem;
