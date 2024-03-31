@@ -41,3 +41,7 @@ button {
   background-color: transparent;
   font-size: 1.8rem;
 }
+
+::-webkit-scrollbar{
+  display: none;
+}

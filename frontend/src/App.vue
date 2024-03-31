@@ -2,6 +2,7 @@
   <div :class="{ 'dark-mode': darkMode }">
     <Navbar />
     <RouterView />
+    <Footer/>
   </div>
 
 </template>
@@ -9,12 +10,14 @@
 <script>
 import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 import { useThemeStore } from './store/store';
 import { computed } from 'vue';
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    Footer
   }, 
   setup(){
     const themeStore = useThemeStore()
