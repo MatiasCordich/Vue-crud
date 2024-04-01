@@ -1,6 +1,8 @@
 <template>
     <footer class="footer">
-        <p>Made by Matias</p>
+        <p>Made by
+            <a href="https://matiassiocordich.vercel.app/" target="_blank">Matias</a>
+        </p>
         <p class="text">Made with Vue, MySQL and lot of love <img width="14" height="14"
                 src="https://img.icons8.com/material-rounded/24/dc3545/like--v1.png" alt="like--v1" /></p>
         <p>{{ currentYear }}</p>
@@ -38,7 +40,11 @@ export default {
     padding: .5rem;
 }
 
-.text{
+.footer a{
+    color: var(--green);
+}
+
+.text {
     display: flex;
     align-items: center;
     gap: .2rem;

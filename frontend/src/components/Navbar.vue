@@ -158,6 +158,7 @@ nav {
 
 .menu ul {
     gap: 1.5rem;
+    padding: 1rem;
 }
 
 .menu a {
