@@ -22,7 +22,7 @@
 
       <div class="form_field">
         <label for="precio">Precio</label>
-        <Field name="precio" type="number" id="precio" v-model.number="formData.precio" rules="required"></Field>
+        <Field name="precio" type="number" step="any" id="precio" v-model.number="formData.precio" rules="required"></Field>
         <ErrorMessage name="precio" class="error-message" />
       </div>
 
